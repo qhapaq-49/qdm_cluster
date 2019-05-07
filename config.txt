@@ -15,6 +15,8 @@ author Ryoto Sawada
 # pondernumやdistなどの設定はnodeの前に書かなければいけない
 # node, dist, id, author, シャープから始まらない全ての文字列は直前で定義したnodeのオプションとみなされる
 
+# 以下、ローカルではqdm_cluster.exeと同じディレクトリに実行ファイル(YaneuraOu-by-gcc)と評価関数(evalフォルダ)と定跡(bookフォルダ)があるとみなす
+
 # yaneura0という名前のslaveをgenerator(multiponder用の手を探すエンジン)として起動する。エンジンとしてはYaneuraOu-by-gccを使うという意味
 # generatorは必ず一つ以上必要
 # generatorはremoteで起動することは出来ない
@@ -23,6 +25,7 @@ author Ryoto Sawada
 node yaneura0 generator ./YaneuraOu-by-gcc
 # generatorの設定
 setoption name Threads value 8
+# generatorに定跡を入れてはいけない
 setoption name BookFile value no_book
 # multipvの数がslaveの数より小さいとクラスタを使い切れないので注意
 setoption name MultiPV value 5
@@ -32,6 +35,7 @@ setoption name PvInterval value 0
 node yaneura1 local ./YaneuraOu-by-gcc
 setoption name Threads value 2
 setoption name Hash value 16
+# 定跡を使う場合、全てのslaveに定跡を入れる必要がある
 setoption name BookFile value user_book1.db
 setoption name NetworkDelay2 value 6000
 
