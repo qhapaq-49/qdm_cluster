@@ -1,0 +1,68 @@
+# シャープで始まる行はコメント扱い
+# 割り振る手を決める際に送るコマンド
+dist go depth 6
+
+# pondernumでpreponderの割り振り方を決める
+# pondernum X Y で自分の最善手上位X手に対する、相手の返しの上位Y手をpreponderに使う
+# preponderの計算時間は2Xに比例することに注意
+pondernum 2 2
+
+# id, authorでusiコマンドに対して返すソフト名を設定できる
+id Qhapaq
+author Ryoto Sawada
+
+# node node_name node_params engine_name という書式でslaveの設定を行う
+# pondernumやdistなどの設定はnodeの前に書かなければいけない
+# node, dist, id, author, シャープから始まらない全ての文字列は直前で定義したnodeのオプションとみなされる
+
+# yaneura0という名前のslaveをgenerator(multiponder用の手を探すエンジン)として起動する。エンジンとしてはYaneuraOu-by-gccを使うという意味
+# generatorは必ず一つ以上必要
+# generatorはremoteで起動することは出来ない
+# multipvのプロトコルは色々怪しいのでgeneratorにはやねうら王を使うのが吉
+
+node yaneura0 generator ./YaneuraOu-by-gcc
+# generatorの設定
+setoption name Threads value 8
+setoption name BookFile value no_book
+# multipvの数がslaveの数より小さいとクラスタを使い切れないので注意
+setoption name MultiPV value 5
+setoption name PvInterval value 0
+
+# yaneura1という名前のslaveをlocalで起動する。エンジンとしてはYaneuraOu-by-gccを使うという意味
+node yaneura1 local ./YaneuraOu-by-gcc
+setoption name Threads value 2
+setoption name Hash value 16
+setoption name BookFile value user_book1.db
+setoption name NetworkDelay2 value 6000
+
+# 以下同様に起動していく
+node yaneura2 local ./YaneuraOu-by-gcc
+setoption name Threads value 2
+setoption name Hash value 16
+setoption name BookFile value user_book1.db
+setoption name NetworkDelay2 value 6000
+
+node yaneura3 local ./YaneuraOu-by-gcc
+setoption name Threads value 2
+setoption name Hash value 16
+setoption name BookFile value user_book1.db
+setoption name NetworkDelay2 value 6000
+
+node yaneura4 local ./YaneuraOu-by-gcc
+setoption name Threads value 2
+setoption name Hash value 16
+setoption name BookFile value user_book1.db
+setoption name NetworkDelay2 value 6000
+
+# リモートマシンを起動したい場合はremoteをオプションにつける
+# node slave名 remote ssh名 バイナリのあるディレクトリ バイナリ名
+# 以下の場合、yaneurarという名前でgoldexperienceというサーバの~/bin にある YaneuraOu-by-gccを起動する
+# QDMは ssh goldexperience; cd ~/bin; ./YaneuraOu-by-gcc というコマンドを実行する
+
+# node yaneurar remote goldexperience ~/bin ./YaneuraOu-by-gcc
+# 設定の書き方はlocalと同じ
+# setoption name Threads value 4
+# setoption name Hash value 16
+# setoption name EvalDir value orqha-1018
+# setoption name BookFile value user_book1.db
+# setoption name NetworkDelay2 value 6000
